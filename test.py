@@ -140,7 +140,13 @@ def test_create_table():
     create_table(conn)
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='employees'"
+        '''
+            CREATE TABLE IF NOT EXISTS employees (
+                id INTEGER PRIMARY KEY,
+                name TEXT NOT NULL,
+                department TEXT NOT NULL
+            );
+            '''
     )
     table_exists = cursor.fetchone()
     assert table_exists is not None
@@ -156,7 +162,10 @@ def setup_database():
     cursor.execute(
         """
         INSERT INTO employees (name, department)
-        VALUES ('Alice', 'HR'), ('Bob', 'Engineering'), ('Charlie', 'Marketing')
+        VALUES
+        ('Alice', 'HR'),
+        ('Bob', 'Engineering'),
+        ('Charlie', 'Marketing')
         """
     )
     conn.commit()
