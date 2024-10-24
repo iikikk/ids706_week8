@@ -32,4 +32,4 @@ jobs:
     - name: Run tests
       run: |
         pip install pytest
-        python -m pytest -vv --cov=main --cov=mylib test_*.py
+        pytest test.py -vv
