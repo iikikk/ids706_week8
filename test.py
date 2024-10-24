@@ -2,7 +2,7 @@ import sqlite3
 import os
 import time
 from memory_profiler import profile
-
+import pytest
 
 @profile  # This decorator enables memory profiling for the function
 def main():
@@ -112,7 +112,89 @@ def main():
 
     end_time = time.time()
     print(f"Execution time: {end_time - start_time} seconds")
+def create_connection(db_file):
+    return sqlite3.connect(db_file)
 
+# Helper function to create table
+def create_table(conn):
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS employees (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            department TEXT NOT NULL
+        )
+        """
+    )
+    conn.commit()
+
+# Test function to check table creation
+def test_create_table():
+    conn = create_connection(":memory:")
+    create_table(conn)
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='employees'")
+    table_exists = cursor.fetchone()
+    assert table_exists is not None
+    conn.close()
+
+# Setup function to insert data
+@pytest.fixture
+def setup_database():
+    conn = create_connection(":memory:")
+    create_table(conn)
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        INSERT INTO employees (name, department)
+        VALUES ('Alice', 'HR'), ('Bob', 'Engineering'), ('Charlie', 'Marketing')
+        """
+    )
+    conn.commit()
+    return conn
+
+# Test reading data
+def test_read_data(setup_database):
+    conn = setup_database
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM employees")
+    rows = cursor.fetchall()
+    assert len(rows) == 3  # Expecting three entries
+    conn.close()
+
+# Test updating data
+def test_update_data(setup_database):
+    conn = setup_database
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        UPDATE employees
+        SET department = 'Sales'
+        WHERE name = 'Charlie'
+        """
+    )
+    conn.commit()
+    cursor.execute("SELECT department FROM employees WHERE name = 'Charlie'")
+    updated_dept = cursor.fetchone()[0]
+    assert updated_dept == 'Sales'
+    conn.close()
+
+# Test deleting data
+def test_delete_data(setup_database):
+    conn = setup_database
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        DELETE FROM employees
+        WHERE name = 'Bob'
+        """
+    )
+    conn.commit()
+    cursor.execute("SELECT * FROM employees WHERE name = 'Bob'")
+    bob = cursor.fetchone()
+    assert bob is None
+    conn.close()
 
 if __name__ == "__main__":
     main()
