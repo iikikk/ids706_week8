@@ -1,36 +1,30 @@
-# SQL Database Interaction with Python
+# Rust vs. Python Performance Comparison
 
 ## Description
 
-A Python script that connects to an SQLite database and performs CRUD operations, including custom SQL queries.
+This project focuses on rewriting a Python script for data processing into Rust to explore potential improvements in performance, specifically in execution time and memory usage. The tasks involve database operations such as creating, reading, updating, deleting data and two queries from an SQLite database.
 
 ## CI/CD Pipeline
-The project uses GitHub Actions to automate testing of database operations on every push. The pipeline:
+Our CI/CD setup ensures that both Rust and Python scripts are automatically built and tested upon each commit. This process helps in maintaining high code quality and performance through continuous integration practices. The process includes test, format and lint.
 
-Loads the existing example.db file into the environment.
-Runs the script, which uses the existing database.
-Verifies that each CRUD operation works correctly using assertions.
-Prints the results of each operation to the pipeline logs for review.
+[![Python CI](https://github.com/iikikk/ids706_week8/actions/workflows/python-app.yml/badge.svg)](https://github.com/iikikk/ids706_week8/actions/workflows/python-app.yml)
 
-[![Python application](https://github.com/iikikk/Python-Script-interacting-with-SQL-Database/actions/workflows/python-app.yml/badge.svg)](https://github.com/iikikk/Python-Script-interacting-with-SQL-Database/actions/workflows/python-app.yml)
-
-### loading the .db file
-![ci](./ci.png)
-## Requirements
-
-- Python 3.x
+[![CI](https://github.com/iikikk/ids706_week8/actions/workflows/rust.yml/badge.svg)](https://github.com/iikikk/ids706_week8/actions/workflows/rust.yml)
 
 ## Usage
 
 1. Clone the repository.
-2. Run the script:
+2. Run the Rust Script:
+
+   ```bash
+   cargo run
+3. Run the script:
 
    ```bash
    python test.py
-## Database connection
-Python script has successfully connected to sqlite database.
+## Features and Functionality
+The Rust script efficiently handles database interactions with several operations:
 
-![connection](./connection.png)
 ## CRUD Operations
 ### Create Operation
 After inserting the initial data into the employees table, the data is as follows:
@@ -39,7 +33,7 @@ After inserting the initial data into the employees table, the data is as follow
 ### Read Operation
 Retrieving all data from the employees table:
 
-![create](./read.png)
+![read](./read.png)
 ### Update Operation
 After updating Charlie's department to Sales, the data is:
 
@@ -58,3 +52,22 @@ Selecting employees whose names start with 'A':
 
 ![q2](./q2.png)
 
+## Python Implementation
+The Python version performs similar database operations, enabling a direct comparison of functionality and performance between the two languages.
+
+## Performance Comparison
+### Execution Time
+1. Python: 0.440 seconds
+![time1](./time1.png)
+2. Rust: 0.0336 seconds
+![time2](./time2.png)
+Rust demonstrates a significant improvement in execution time, being approximately 13 times faster than the Python implementation.
+
+### Memory Usage
+Memory usage was analyzed during the execution of both scripts:
+1. Python: Consistent use of 31.0 MiB
+![memory1](./memory1.png)
+2. Rust: Peaks at 39.6 MiB but generally lower during other operations
+![memory2](./memory2.png)
+### Discussion
+The Rust script not only runs faster but also manages memory more efficiently during most operations, demonstrating Rust's advantages in systems-level tasks and performance-critical applications.
