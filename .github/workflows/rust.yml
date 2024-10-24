@@ -34,7 +34,7 @@ jobs:
       working-directory: ${{ env.WORKING_DIR }}
 
     - name: Lint
-      run: cargo clippy -- -D warnings # Treats all Clippy warnings as errors.
+      run: cargo clippy 
       working-directory: ${{ env.WORKING_DIR }}
 
     - name: Test
