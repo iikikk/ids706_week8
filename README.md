@@ -71,3 +71,5 @@ Memory usage was analyzed during the execution of both scripts:
 ![memory2](./memory2.png)
 ### Discussion
 The Rust script not only runs faster but also manages memory more efficiently during most operations, demonstrating Rust's advantages in systems-level tasks and performance-critical applications.
+This project underscores Rust's potential in handling data-intensive operations with enhanced performance. Such improvements are crucial in applications where execution speed and resource management are of paramount importance.
+
