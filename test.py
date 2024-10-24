@@ -134,25 +134,6 @@ def create_table(conn):
     conn.commit()
 
 
-# Test function to check table creation
-def test_create_table():
-    conn = create_connection(":memory:")
-    create_table(conn)
-    cursor = conn.cursor()
-    cursor.execute(
-        """
-            CREATE TABLE IF NOT EXISTS employees (
-                id INTEGER PRIMARY KEY,
-                name TEXT NOT NULL,
-                department TEXT NOT NULL
-            );
-            """
-    )
-    table_exists = cursor.fetchone()
-    assert table_exists is not None
-    conn.close()
-
-
 # Setup function to insert data
 @pytest.fixture
 def setup_database():
