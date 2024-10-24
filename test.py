@@ -31,7 +31,8 @@ def main():
         cursor.execute(
             """
             INSERT INTO employees (name, department)
-            VALUES ('Alice', 'HR'), ('Bob', 'Engineering'), ('Charlie', 'Marketing')
+            VALUES ('Alice', 'HR'), ('Bob', 'Engineering'),
+            ('Charlie', 'Marketing')
         """
         )
         conn.commit()
