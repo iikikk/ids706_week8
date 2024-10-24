@@ -1,35 +1,46 @@
-name: Rust CI
+name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
+    env:
+      WORKING_DIR: src #change this to the rust project name you are developing.
+
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v3
 
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
-        profile: minimal
         toolchain: stable
         override: true
-        components: rustfmt, clippy
 
-    - name: Check formatting
-      run: cargo fmt -- --check
+    - name: Check
+      run: cargo check
+      working-directory: ${{ env.WORKING_DIR }}
 
-    - name: Lint with clippy
-      run: cargo clippy -- -D warnings
+    - name: Format
+      run: cargo fmt
+      working-directory: ${{ env.WORKING_DIR }}
 
-    - name: Build
-      run: cargo build --verbose
+    - name: Lint
+      run: cargo clippy -- -D warnings # Treats all Clippy warnings as errors.
+      working-directory: ${{ env.WORKING_DIR }}
 
-    - name: Run tests
-      run: cargo test --verbose
+    - name: Test
+      run: cargo test
+      working-directory: ${{ env.WORKING_DIR }}
+
+    - name: Release
+      run: cargo build --release
+      working-directory: ${{ env.WORKING_DIR }}
